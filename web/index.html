@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en" data-app="wizard-withings" data-version="0.1.0">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark light">
+  <title>Withings</title>
+  <script src="boot.js"></script>
+  <link rel="stylesheet" href="wizard-tokens.css">
+  <link rel="stylesheet" href="wizard-ui.css">
+  <link rel="stylesheet" href="standalone.css">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="/wizard-os-home/core/app-client.js"></script>
+  <script defer src="wizard-sheet.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="wz-app">
+    <main class="wz-scroll" id="main">
+      <section class="hl-top" aria-label="Withings connection">
+        <div class="wz-conn hl-solid">
+          <div class="wz-tile hl-logo" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6.5"/><path d="M12 8.6V12l2.4 1.6"/></svg></div>
+          <div class="wz-main"><b>Withings</b><small id="conn-line">Checking…</small></div>
+          <span id="conn-pill" class="wz-pill off">…</span>
+        </div>
+      </section>
+
+      <!-- Connected: the account, one action, details. -->
+      <section id="account" class="hl-account" hidden aria-label="Connected account">
+        <ul class="wz-list hl-solid hl-rows">
+          <li class="wz-row">
+            <span class="wz-tile hl-avatar" id="acct-initial" aria-hidden="true">W</span>
+            <span class="wz-main"><b id="acct-name">Withings account</b><small id="acct-sub"></small></span>
+          </li>
+          <li class="wz-row">
+            <span class="wz-tile hl-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></span>
+            <span class="wz-main"><b id="sync-title">Synced</b><small id="sync-sub"></small></span>
+          </li>
+        </ul>
+        <p id="sync-error" class="hl-warn" hidden></p>
+        <div class="wz-actions">
+          <button type="button" class="wz-button" id="sync-now">Sync now</button>
+          <a class="wz-button secondary" id="open-health" href="/wizard-health/">Open Health</a>
+        </div>
+        <p class="hl-hint hl-pad">Your sleep, activity and workouts show in the Health app. Withings gives no recovery score, so Health shows recovery as “no score” for Withings. This app only keeps the Withings sign-in and the synced copy.</p>
+      </section>
+
+      <!-- Guided setup: shown until Withings is connected. One step open at a time. -->
+      <section id="setup" class="hl-setup" hidden aria-label="Set up Withings">
+        <p class="hl-lead">Connect your Withings in five short steps. Everything happens here and on Withings' own sites.</p>
+        <ol class="hl-steps">
+          <li class="hl-step" data-step="1">
+            <button type="button" class="hl-step-h"><span class="hl-num">1</span><span class="hl-step-t">Have a Withings account</span></button>
+            <div class="hl-step-b">
+              <p>You need the Withings account your watch, sleep mat or scale syncs to. Withings' developer access, which this app uses, is free.</p>
+              <p class="hl-hint">Withings says accounts created on or after 12 October 2026 may need a Withings+ membership to share data with a free developer app; older accounts don't. No account yet? <a id="signup-link" target="_blank" rel="noopener noreferrer">Open Withings</a>.</p>
+              <div class="wz-actions"><button type="button" class="wz-button" data-next="2">I have an account</button></div>
+            </div>
+          </li>
+          <li class="hl-step" data-step="2">
+            <button type="button" class="hl-step-h"><span class="hl-num">2</span><span class="hl-step-t">Open the Withings Developer Dashboard</span></button>
+            <div class="hl-step-b">
+              <ol class="hl-sub">
+                <li>Open the dashboard and sign in with your usual Withings email and password.</li>
+                <li>Tap <b>Create an application</b>, choose <b>Public API integration</b> and accept the terms. The free plan is enough.</li>
+              </ol>
+              <div class="wz-actions">
+                <a class="wz-button" id="dash-link" target="_blank" rel="noopener noreferrer">Open Withings Developer Dashboard</a>
+                <button type="button" class="wz-button secondary" data-next="3">Done, next</button>
+              </div>
+            </div>
+          </li>
+          <li class="hl-step" data-step="3">
+            <button type="button" class="hl-step-h"><span class="hl-num">3</span><span class="hl-step-t">Fill in your Withings application</span></button>
+            <div class="hl-step-b">
+              <p>Fill in the form with these values. Each has a Copy button.</p>
+              <div class="hl-field"><span>Application name</span><div class="hl-copy"><input id="v-name" readonly aria-label="Application name"><button type="button" class="hl-cbtn" data-copy="v-name">Copy</button></div></div>
+              <div class="hl-field"><span>Description</span><div class="hl-copy"><input id="v-desc" readonly aria-label="Description"><button type="button" class="hl-cbtn" data-copy="v-desc">Copy</button></div></div>
+              <div class="hl-field">
+                <span>Callback URL (Registered URLs)</span>
+                <div class="hl-copy"><textarea id="v-redirect" rows="2" readonly spellcheck="false" aria-label="Callback URL"></textarea><button type="button" class="hl-cbtn" data-copy="v-redirect">Copy</button></div>
+                <small id="redir-note" class="hl-hint"></small>
+                <button type="button" class="hl-link" id="redir-other" hidden></button>
+              </div>
+              <div class="hl-field"><span>Scopes</span>
+                <ul class="hl-scopes" id="v-scopes"></ul>
+                <div class="hl-copy"><input id="v-scopes-all" readonly aria-label="Scopes"><button type="button" class="hl-cbtn" data-copy="v-scopes-all">Copy</button></div>
+                <small class="hl-hint">Nothing to enter on Withings: this app asks for them when you connect.</small>
+              </div>
+              <div class="hl-field"><span>Plan</span><p class="hl-plain">On Withings' free plan, sleep score, overnight HRV and breathing rate may be held back. The app notices and syncs everything else.</p></div>
+              <p>Save the application. Withings then shows its <b>Client ID</b> and <b>Client Secret</b>.</p>
+              <div class="wz-actions"><button type="button" class="wz-button" data-next="4">Next</button></div>
+            </div>
+          </li>
+          <li class="hl-step" data-step="4">
+            <button type="button" class="hl-step-h"><span class="hl-num">4</span><span class="hl-step-t">Paste your Client ID and Client Secret</span></button>
+            <div class="hl-step-b">
+              <div id="keys-saved" class="hl-saved" hidden>
+                <p><b>Keys saved.</b> Client ID <span id="cid-hint" class="hl-mono"></span>, Client Secret saved (hidden).</p>
+                <p class="hl-hint">Callback URL: <span id="saved-redirect" class="hl-mono"></span></p>
+              </div>
+              <form id="keys-form" class="hl-form" autocomplete="off">
+                <label>Client ID<input class="wz-input" id="f-cid" name="client_id" autocomplete="off" spellcheck="false" required></label>
+                <label>Client Secret<input class="wz-input" id="f-secret" name="client_secret" type="password" autocomplete="new-password" spellcheck="false" required></label>
+                <label>Callback URL, exactly as entered on Withings<input class="wz-input" id="f-redirect" name="redirect_uri" spellcheck="false" required></label>
+                <div class="wz-actions"><button type="submit" class="wz-button" id="keys-save">Save and test keys</button></div>
+              </form>
+              <div class="wz-actions">
+                <button type="button" class="wz-button secondary" id="keys-test">Test keys</button>
+                <button type="button" class="wz-button secondary" id="keys-replace" hidden>Replace keys</button>
+                <button type="button" class="wz-button" id="keys-next" data-next="5" hidden>Next</button>
+              </div>
+              <p id="test-result" class="hl-result" role="status" aria-live="polite"></p>
+            </div>
+          </li>
+          <li class="hl-step" data-step="5">
+            <button type="button" class="hl-step-h"><span class="hl-num">5</span><span class="hl-step-t">Connect with Withings</span></button>
+            <div class="hl-step-b">
+              <ol class="hl-sub" id="connect-steps">
+                <li>Tap <b>Connect with Withings</b>. Withings opens in a new tab of this browser.</li>
+                <li>Sign in to Withings if asked, pick your account and tap <b>Allow this app</b>.</li>
+                <li id="connect-step-own">Withings brings you back to a “Withings connected” page on this box. Close it; this screen updates by itself.</li>
+                <li id="connect-step-3" hidden></li>
+              </ol>
+              <div class="wz-actions"><button type="button" class="wz-button" id="connect">Connect with Withings</button>
+                <a class="wz-button secondary" id="auth-link" target="_blank" rel="noopener noreferrer" hidden>Open Withings sign-in</a></div>
+              <p id="connect-note" class="hl-hint" role="status" aria-live="polite"></p>
+              <form id="paste-form" class="hl-form" autocomplete="off">
+                <label id="paste-label">Address from the browser bar<input class="wz-input" id="f-paste" spellcheck="false" autocapitalize="none" placeholder="https://…/callback?code=…" required></label>
+                <div class="wz-actions"><button type="submit" class="wz-button" id="paste-go">Finish connecting</button></div>
+              </form>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <details class="wz-more" id="more" hidden>
+        <summary>Connection details</summary>
+        <dl class="hl-dl" id="details"></dl>
+        <div class="wz-actions">
+          <button type="button" class="wz-button secondary" id="open-keys">Replace keys</button>
+          <button type="button" class="wz-button secondary hl-danger" id="open-disconnect">Disconnect</button>
+        </div>
+      </details>
+    </main>
+    <p id="status" class="wz-status wz-sr" role="status" aria-live="polite"></p>
+  </div>
+
+  <dialog class="wz-sheet" id="sheet-keys" aria-labelledby="sk-h">
+    <h2 id="sk-h">Replace Withings keys</h2>
+    <p class="hl-hint">Paste the Client ID and Client Secret from your application on the Withings Developer Dashboard. You sign in to Withings again afterwards; the synced history stays.</p>
+    <form id="rk-form" class="hl-form" autocomplete="off">
+      <label>Client ID<input class="wz-input" id="rk-cid" autocomplete="off" spellcheck="false" required></label>
+      <label>Client Secret<input class="wz-input" id="rk-secret" type="password" autocomplete="new-password" spellcheck="false" required></label>
+      <label>Callback URL<input class="wz-input" id="rk-redirect" spellcheck="false" required></label>
+      <div class="wz-actions"><button type="submit" class="wz-button">Save and test</button></div>
+    </form>
+  </dialog>
+
+  <dialog class="wz-sheet" id="sheet-disconnect" aria-labelledby="sd-h">
+    <h2 id="sd-h">Disconnect Withings?</h2>
+    <p>The app revokes its access on Withings and deletes its synced copy. Health stops showing Withings data. Your data on Withings is not touched.</p>
+    <label class="hl-checkrow"><input type="checkbox" id="sd-forget"> Also remove the saved Client ID and Client Secret</label>
+    <div class="wz-actions"><button type="button" class="wz-button hl-danger-fill" id="sd-go">Disconnect</button></div>
+  </dialog>
+</body>
+</html>

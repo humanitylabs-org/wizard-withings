@@ -1,0 +1,3 @@
+# Source and license notice
+
+Withings (wizard-withings) started from the WHOOP connector (wizard-whoop), itself from Wizard App Manager's hello-wizard reference template (GPL-3.0-only), and keeps its canonical Wizard style snapshot (`web/boot.js`, `web/wizard-tokens.css`, `web/wizard-ui.css`, `web/wizard-sheet.js`, pinned by `appearance-provenance.json`) unchanged. The view loads the shared `/wizard-os-home/core/app-client.js`. The server is Python standard library only. Withings is a trademark of Withings SA; this app uses Withings' public API with the owner's own developer application and is not affiliated with Withings. The icon is a generic watch, not Withings' logo. Distributed under GPL-3.0-only; no warranty.
