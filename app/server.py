@@ -44,7 +44,7 @@ ROOT = Path(__file__).resolve().parent.parent if '__file__' in globals() else Pa
 DATA = Path(os.environ.get('DATA_DIR', ROOT / '.data'))
 APP_ID = 'wizard-withings'
 NAME = 'Withings'
-VERSION = '0.1.0'
+VERSION = '0.1.1'
 PREFIX = '/' + APP_ID
 PORT = os.environ.get('PORT', '8834')
 AUTH_URL = os.environ.get('WITHINGS_AUTH_URL', 'https://account.withings.com/oauth2_user/authorize2')
@@ -337,7 +337,7 @@ def save_keys(body):
     u = urlsplit(redirect)
     if u.scheme != 'https' or not u.hostname or len(redirect) > 255:
         raise Problem(400, 'The callback URL must be the exact https address you registered in your Withings application.')
-    if u.hostname in ('localhost', '127.0.0.1') or re.fullmatch(r'[\d.]+|\[?[0-9a-f:]+\]?', u.hostname):
+    if u.hostname in ('localhost', '127.0.0.1') or re.fullmatch(r'[\d.]+', u.hostname) or ':' in u.hostname:
         raise Problem(400, 'Withings refuses localhost and IP addresses as callback URLs. Use this box\u2019s https address.')
     with LOCK:
         old = _keys()

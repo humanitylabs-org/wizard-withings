@@ -249,7 +249,7 @@ class WithingsTest(unittest.TestCase):
 
         # ---- step 4: Withings refuses localhost/IP/plain http callbacks, so the app does too
         for bad in ('http://localhost:3000/callback', 'https://localhost/callback', 'https://100.1.2.3:8444/wizard-withings/callback',
-                    'http://box.example.ts.net/wizard-withings/callback'):
+                    'http://box.example.ts.net/wizard-withings/callback', 'https://[::1]:8444/wizard-withings/callback'):
             code, _ = http(self.port, 'POST', '/api/keys', {'client_id': CID, 'client_secret': SECRET, 'redirect_uri': bad})
             self.assertEqual(code, 400, bad)
         http(self.port, 'POST', '/api/keys', {'client_id': CID, 'client_secret': 'wrong-secret-value-123', 'redirect_uri': CALLBACK})
