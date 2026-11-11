@@ -10,8 +10,8 @@
     "network"
   ],
   "description": "Connect your Withings with a guided setup inside the app. Needs your own developer credentials: a free Public API integration application you create on the Withings Developer Dashboard (the app shows every value to copy). The app keeps a private synced copy and offers it read-only to other apps on this box through the health-data contract; the Health app shows sleep, activity (intensity minutes) and workouts. Withings has no recovery score. Keys and sign-in stay in the app.",
-  "tipi_version": 2,
-  "version": "0.1.1",
+  "tipi_version": 3,
+  "version": "0.1.2",
   "source": "https://github.com/oscarhenrycollins/wizard-withings",
   "exposable": false,
   "supported_architectures": [
@@ -19,7 +19,7 @@
     "arm64"
   ],
   "created_at": 1793438740000,
-  "updated_at": 1793439225000,
+  "updated_at": 1794360355068,
   "dynamic_config": true,
   "min_tipi_version": "4.8.0",
   "uid": 1000,

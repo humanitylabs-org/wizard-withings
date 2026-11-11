@@ -4,7 +4,7 @@ id: wizard-withings
 name: Withings
 type: external
 category: system
-version: 0.1.1
+version: 0.1.2
 summary: Connect your Withings. Health and your other apps get read-only sleep, activity and workouts (Withings has no recovery score).
 tags: [data]
 license: GPL-3.0-only
@@ -35,6 +35,9 @@ system: true
 uses: []
 needs: []
 health: /healthz
+switches:
+  contract: wizard.app-switches/1
+  path: /api/switches
 ---
 
 # Withings
